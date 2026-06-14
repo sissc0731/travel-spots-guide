@@ -1,0 +1,18 @@
+name: Daily Update
+on:
+  schedule: [{cron: '30 4 * * *'}]
+  workflow_dispatch:
+permissions: {contents: write, pages: write, id-token: write}
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '20'}
+      - run: node scripts/generate.js
+      - run: |
+          git config user.name "Bot"
+          git config user.email "bot@x.com"
+          git add feed.json posts/
+          git diff --staged --quiet || (git commit -m "Daily: $(date +%Y-%m-%d)" && git push)
