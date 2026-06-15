@@ -36,7 +36,8 @@ const pool=pools[idx];
 const titles=['每日分享 | '+today,'实用推荐 | '+today,'效率手册 | '+today,'生活灵感 | '+today];
 const title=titles[new Date().getDate()%titles.length];
 
-feed.posts.unshift({slug,date:today,title:title,items:pool});
+var items=pool.map(function(i){return {title:i.t,desc:i.d,tag:i.tag,img:i.img}});
+feed.posts.unshift({slug,date:today,title:title,items:items});
 feed.updated=today;
 fs.writeFileSync(fp,JSON.stringify(feed,null,2));
 
